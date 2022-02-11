@@ -1,2 +1,4 @@
+.env
+
 # Ignore any .sql files that users may be importing/exporting
 *.sql

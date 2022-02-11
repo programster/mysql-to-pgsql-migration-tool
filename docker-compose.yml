@@ -1,0 +1,40 @@
+version: "3"
+
+networks:
+  pgloaderBridge:
+    driver: bridge
+
+
+services:
+  pgsql:
+    container_name: pgsql
+    image: postgres:13.5-bullseye # using 13.5 instead of 14.1 because of: https://github.com/dimitri/pgloader/issues/1183
+    restart: "no"
+    networks:
+      - pgloaderBridge
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=${PG_DB_NAME}
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+
+
+  mysql:
+    image: mysql:5.6 # issues with using mysql 8: https://stackoverflow.com/questions/56542036/pgloader-failed-to-connect-to-mysql-at-localhost-port-3306-as-user-root
+    container_name: mysql
+    restart: "no"
+    networks:
+      - pgloaderBridge
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DB_NAME}
+
+  pgloader:
+    image: dimitri/pgloader
+    container_name: pgloader
+    networks:
+      - pgloaderBridge
+    command: pgloader mysql://root:$MYSQL_ROOT_PASSWORD@mysql/$MYSQL_DB_NAME postgresql://$PG_USER:$PG_PASSWORD@pgsql/$PG_DB_NAME
