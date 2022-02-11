@@ -1,2 +1,4 @@
-# mysql-to-pgsql-migration-tool
-A tool that makes use of Docker and pgloader to assist with migrating from a MySQL database to a PostgreSQL one.
+MySQL To PostgreSQL Migration Tool
+==================================
+
+This tool aims to make it easy to convert an existing MySQL database over to a PostgreSQL one with the help of Docker and [PgLoader](https://github.com/dimitri/pgloader).
