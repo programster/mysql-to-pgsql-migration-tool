@@ -22,8 +22,8 @@ different credentials.
 Run the following commands to spin up the MySQL and PostgreSQL databases.
 
 ```bash
-docker-compose up mysql -d
-docker-compose up pgsql -d
+docker-compose up -d mysql
+docker-compose up -d pgsql
 ```
 
 Now import the database by running the following commands, making sure to 
@@ -57,21 +57,17 @@ or dump file in order to resolve any of the issues. E.g. dates with `0000-00-00`
 get converted to null, which may fail to be inserted, due to a `NOT NULL` 
 constraint.
 
-Now dump your database with the following commands:
+Now dump your database by running the pgdumper service:
 
 ```bash
-# load the environment variables
-set -a; . .env; set +a
-
-pg_dump  \
-  --host pgsql \
-  --port "5432" \
-  --username $PG_USER \
-  --file myPostgresqlDumpFile.sql \
-  $PG_DB_NAME
+docker-compose up pgdumper
 ```
 
-That's it! You now have a PostgreSQL dump file that you can import into a
+Note: we created a service for this, to prevent users from having to install the postgresql client, 
+and also to prevent any issues with mismatched versions.
+
+
+You now have a PostgreSQL dump file in the `output/` folder, which you can import into a
 PostgreSQL database with:
 
 ```bash
@@ -81,4 +77,11 @@ psql \
   --username $USERNAME \
   -d $DATABASE_NAME \
   -f $DUMP_FILEPATH
+```
+
+Now you can "clean up" by running the following command to spin-down and remove the running MySQL
+and PostgreSQL containers.
+
+```bash
+docker-compose down
 ```
