@@ -32,9 +32,28 @@ services:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DB_NAME}
 
+
   pgloader:
     image: dimitri/pgloader
     container_name: pgloader
     networks:
       - pgloaderBridge
     command: pgloader mysql://root:$MYSQL_ROOT_PASSWORD@mysql/$MYSQL_DB_NAME postgresql://$PG_USER:$PG_PASSWORD@pgsql/$PG_DB_NAME
+
+
+  pgDumper:
+    build:
+      context: ./pgdumper
+      dockerfile: Dockerfile
+    container_name: pgdumper
+    image: pgdumper
+    networks:
+      - pgloaderBridge
+    environment:
+      - PG_DB_NAME=${PG_DB_NAME}
+      - PG_USER=${PG_USER}
+      - PGPASSWORD=${PG_PASSWORD}
+    volumes:
+      - ./output:/root
+    command: pg_dump  --host pgsql --port "5432" --username $PG_USER --password --file /root/myPostgresqlDumpFile.sql  $PG_DB_NAME
+
