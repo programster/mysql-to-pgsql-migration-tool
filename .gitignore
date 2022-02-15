@@ -2,3 +2,6 @@
 
 # Ignore any .sql files that users may be importing/exporting
 *.sql
+
+# Ignore any phpstorm IDE files
+.idea
