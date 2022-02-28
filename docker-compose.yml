@@ -41,7 +41,7 @@ services:
     command: pgloader mysql://root:$MYSQL_ROOT_PASSWORD@mysql/$MYSQL_DB_NAME postgresql://$PG_USER:$PG_PASSWORD@pgsql/$PG_DB_NAME
 
 
-  pgDumper:
+  pgdumper:
     build:
       context: ./pgdumper
       dockerfile: Dockerfile
@@ -55,5 +55,14 @@ services:
       - PGPASSWORD=${PG_PASSWORD}
     volumes:
       - ./output:/root
-    command: pg_dump  --host pgsql --port "5432" --username $PG_USER --password --file /root/myPostgresqlDumpFile.sql  $PG_DB_NAME
+    command: >
+      pg_dump 
+      --host pgsql 
+      --port "5432" 
+      --username ${PG_USER} 
+      --password 
+      --no-acl 
+      --no-owner 
+      --file /root/myPostgresqlDumpFile.sql 
+      ${PG_DB_NAME}
 
