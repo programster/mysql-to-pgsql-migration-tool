@@ -87,12 +87,23 @@ psql \
 
 
 ### A Note About PGLoader Created Schema
-Note: the PGLoader tool will have created a schema with the same name as the MySQL database. You *may* wish to keep this. Alternatively, you may wish to perform the following operation after importing your database:
+Note: the PGLoader tool will have created a schema with the same name as the MySQL database. 
+You *may* wish to keep this. Alternatively, you may wish to perform the following operation after 
+importing your database:
 
 ```sql
 DROP SCHEMA 'public';
 RENAME SCHEMA '$MYSQL_DB_NAME' TO 'public';
 ```
+
+Alternatively, you may wish to 
+[set your search path](https://www.postgresql.org/docs/9.6/ddl-schemas.html#DDL-SCHEMAS-PATH), 
+so that you can continue to access these tables using *unqualified names*:
+
+```sql
+SET search_path TO '$MYSQL_DB_NAME',public;
+```
+
 
 ### Cleanup
 Now you can "clean up" by running the following command to spin-down and remove the running MySQL
