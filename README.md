@@ -62,6 +62,39 @@ or dump file in order to resolve any of the issues. E.g. dates with `0000-00-00`
 get converted to null, which may fail to be inserted, due to a `NOT NULL`
 constraint.
 
+
+### Optional - Rename Schema
+The PGLoader tool will have created a schema with the same name as the
+MySQL database. You *may* wish to keep this. Alternatively, you may wish to
+perform the following operation at this point.
+
+1. Enter the PostgreSQL container:
+```bash
+docker exec -it pgsql /bin/bash
+```
+
+2. Log into the database (you will need to substitute the variables with the
+values in your .env file):
+```bash
+psql --user $PG_USER $PG_DB_NAME
+```
+
+3. Rename the pg_dumper created schema to public (which requires deleting
+the public schema first).
+```sql
+DROP SCHEMA public;
+ALTER SCHEMA $MYSQL_DB_NAME RENAME TO public;
+```
+
+Alternatively, you may wish to skip the steps above and just [set your search
+path](https://www.postgresql.org/docs/9.6/ddl-schemas.html#DDL-SCHEMAS-PATH),
+after having imported the PostgreSQL database, so that you can continue to access these tables using *unqualified names*:
+
+```sql
+SET search_path TO '$MYSQL_DB_NAME',public;
+```
+
+
 ### Create PostgreSQL Dump-file
 Now dump your database by running the pgdumper service:
 
@@ -69,11 +102,11 @@ Now dump your database by running the pgdumper service:
 docker-compose up pgdumper
 ```
 
-Note: we created a service for this, to prevent users from having to install the 
+Note: we created a service for this, to prevent users from having to install the
 postgresql client, and also to prevent any issues with mismatched versions.
 
 ### Import PostgreSQL Database Dump
-You now have a PostgreSQL dump file in the `output/` folder, which you can 
+You now have a PostgreSQL dump file in the `output/` folder, which you can
 import into a PostgreSQL database with:
 
 ```bash
@@ -86,27 +119,11 @@ psql \
 ```
 
 
-### A Note About PGLoader Created Schema
-Note: the PGLoader tool will have created a schema with the same name as the 
-MySQL database. You *may* wish to keep this. Alternatively, you may wish to 
-perform the following operation after importing your database:
 
-```sql
-DROP SCHEMA 'public';
-RENAME SCHEMA '$MYSQL_DB_NAME' TO 'public';
-```
-
-Alternatively, you may wish to [set your search 
-path](https://www.postgresql.org/docs/9.6/ddl-schemas.html#DDL-SCHEMAS-PATH), 
-so that you can continue to access these tables using *unqualified names*:
-
-```sql
-SET search_path TO '$MYSQL_DB_NAME',public;
-```
 
 
 ### Cleanup
-Now you can "clean up" by running the following command to spin-down and remove 
+Now you can "clean up" by running the following command to spin-down and remove
 the running MySQL and PostgreSQL containers.
 
 ```bash
