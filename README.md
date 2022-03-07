@@ -2,7 +2,7 @@ MySQL To PostgreSQL Migration Tool
 ==================================
 
 This tool aims to make it easy to convert an existing MySQL database over to a
-PostgreSQL one with the help of Docker and
+PostgreSQL one with the help of Docker and 
 [PgLoader](https://github.com/dimitri/pgloader).
 
 
@@ -69,12 +69,12 @@ Now dump your database by running the pgdumper service:
 docker-compose up pgdumper
 ```
 
-Note: we created a service for this, to prevent users from having to install the postgresql client,
-and also to prevent any issues with mismatched versions.
+Note: we created a service for this, to prevent users from having to install the 
+postgresql client, and also to prevent any issues with mismatched versions.
 
 ### Import PostgreSQL Database Dump
-You now have a PostgreSQL dump file in the `output/` folder, which you can import into a
-PostgreSQL database with:
+You now have a PostgreSQL dump file in the `output/` folder, which you can 
+import into a PostgreSQL database with:
 
 ```bash
 psql \
@@ -87,7 +87,9 @@ psql \
 
 
 ### A Note About PGLoader Created Schema
-Note: the PGLoader tool will have created a schema with the same name as the MySQL database. You *may* wish to keep this. Alternatively, you may wish to perform the following operation after importing your database:
+Note: the PGLoader tool will have created a schema with the same name as the 
+MySQL database. You *may* wish to keep this. Alternatively, you may wish to 
+perform the following operation after importing your database:
 
 ```sql
 DROP SCHEMA 'public';
@@ -95,8 +97,8 @@ RENAME SCHEMA '$MYSQL_DB_NAME' TO 'public';
 ```
 
 ### Cleanup
-Now you can "clean up" by running the following command to spin-down and remove the running MySQL
-and PostgreSQL containers.
+Now you can "clean up" by running the following command to spin-down and remove 
+the running MySQL and PostgreSQL containers.
 
 ```bash
 docker-compose down
