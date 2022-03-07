@@ -2,7 +2,7 @@ MySQL To PostgreSQL Migration Tool
 ==================================
 
 This tool aims to make it easy to convert an existing MySQL database over to a
-PostgreSQL one with the help of Docker and 
+PostgreSQL one with the help of Docker and
 [PgLoader](https://github.com/dimitri/pgloader).
 
 
@@ -95,6 +95,15 @@ perform the following operation after importing your database:
 DROP SCHEMA 'public';
 RENAME SCHEMA '$MYSQL_DB_NAME' TO 'public';
 ```
+
+Alternatively, you may wish to [set your search 
+path](https://www.postgresql.org/docs/9.6/ddl-schemas.html#DDL-SCHEMAS-PATH), 
+so that you can continue to access these tables using *unqualified names*:
+
+```sql
+SET search_path TO '$MYSQL_DB_NAME',public;
+```
+
 
 ### Cleanup
 Now you can "clean up" by running the following command to spin-down and remove 
