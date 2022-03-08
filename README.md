@@ -73,10 +73,9 @@ perform the following operation at this point.
 docker exec -it pgsql /bin/bash
 ```
 
-2. Log into the database (you will need to substitute the variables with the
-values in your .env file):
+2. Log into the database (you *don't* need to substitute the variables, these are set in the container.
 ```bash
-psql --user $PG_USER $PG_DB_NAME
+psql --user $POSTGRES_USER $POSTGRES_DB
 ```
 
 3. Rename the pg_dumper created schema to public (which requires deleting
@@ -103,7 +102,7 @@ docker-compose up pgdumper
 ```
 
 Note: we created a service for this, to prevent users from having to install the
-postgresql client, and also to prevent any issues with mismatched versions.
+PostgreSQL client, and also to prevent any issues with mismatched versions.
 
 ### Import PostgreSQL Database Dump
 You now have a PostgreSQL dump file in the `output/` folder, which you can
