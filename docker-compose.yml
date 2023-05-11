@@ -34,11 +34,11 @@ services:
 
 
   pgloader:
-    image: dimitri/pgloader
+    image: dimitri/pgloader:ccl.latest # need to use ccl.latest tag - https://bit.ly/3LSVu3f
     container_name: pgloader
     networks:
       - pgloaderBridge
-    command: pgloader mysql://root:$MYSQL_ROOT_PASSWORD@mysql/$MYSQL_DB_NAME postgresql://$PG_USER:$PG_PASSWORD@pgsql/$PG_DB_NAME
+    command: pgloader --verbose --debug --root-dir=/root/pgloader/tmp  mysql://root:$MYSQL_ROOT_PASSWORD@mysql/$MYSQL_DB_NAME postgresql://$PG_USER:$PG_PASSWORD@pgsql/$PG_DB_NAME
 
 
   pgdumper:
@@ -56,7 +56,7 @@ services:
     volumes:
       - ./output:/root
     command: >
-      pg_dump 
+      bash -c 'pg_dump 
       --host pgsql 
       --port "5432" 
       --username ${PG_USER} 
@@ -64,5 +64,6 @@ services:
       --no-acl 
       --no-owner 
       --file /root/myPostgresqlDumpFile.sql 
-      ${PG_DB_NAME}
+      ${PG_DB_NAME} 
+      && echo "PostgreSQL dump file successfully created! Check the output folder."'
 
